@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { useAuth } from '../AuthContext';
 import { useNavigate } from 'react-router-dom';
 import Navbar from './Navbar';
+import loginImg from "../imges/login.svg"
 
-const LoginForm = () => {
+export default function Login() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -32,11 +33,16 @@ const LoginForm = () => {
                 alert('Login successful!');
                 login();
                 setLoginUser(responseData.user);
-                // console.log(responseData.user);
+                console.log(responseData.user);
                 navigate('/layout');
             } else {
-                console.error('Failed to login. Server returned:', await response.text());
-                setError('Failed to login.');
+                const errorMessage = await response.text();
+                console.error('Failed to login. Server returned:', errorMessage);
+                console.log(errorMessage.message);
+                setError(errorMessage);
+                setTimeout(() => {
+                    setError('');
+                }, 3000);
             }
         } catch (error) {
             console.error('An error occurred while logging in:', error);
@@ -45,54 +51,65 @@ const LoginForm = () => {
     };
 
     return (
-        <div>
+        <>
             <Navbar />
-            <div className="container w-50 my-5 py-5">
-                <div className="card shadow-sm  ">
-                    <div className="card-body">
-                        <h2 className="card-title">Login</h2>
-                        {error && (
-                            <div className="alert alert-danger alert-dismissible fade show" role="alert">
-                                <strong>Login failed!</strong> {error}
-                                <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-                        )}
-                        <form onSubmit={handleLogin}>
-                            <div className="mb-3">
+            <section className="vh-100">
+                <div className="container py-5 h-100">
+                    <div className="row d-flex align-items-center justify-content-center h-100">
+                        <div className="col-md-8 col-lg-7 col-xl-6">
+                            <img src={loginImg}
+                                className="img-fluid" alt="loginimg" />
+                        </div>
+                        <div className="col-md-7 col-lg-5 col-xl-5 offset-xl-1 card">
+                            <h2 className='text-center my-4'>Login</h2>
+                            <form onSubmit={handleLogin}>
                                 <label htmlFor="username" className="form-label">
-                                    Username:
+                                    Username
                                 </label>
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    id="username"
-                                    maxLength={8}
-                                    value={username}
-                                    onChange={(e) => setUsername(e.target.value)}
-                                />
-                            </div>
-                            <div className="mb-3">
-                                <label htmlFor="password" className="form-label">
-                                    Password:
-                                </label>
-                                <input
-                                    type="password"
-                                    className="form-control"
-                                    id="password"
-                                    minLength={8}
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                />
-                            </div>
-                            <button type="submit" className="btn btn-primary">
-                                Login
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
-};
+                                <div className="form-outline mb-4">
+                                    <input
+                                        type="text"
+                                        className="form-control form-control-lg"
+                                        id="username"
+                                        required
+                                        maxLength={8}
+                                        value={username}
+                                        onChange={(e) => setUsername(e.target.value)}
+                                    />
 
-export default LoginForm;
+                                </div>
+                                <div className="form-outline mb-4">
+                                    <label className="form-label " htmlFor="password">Password</label>
+                                    <input
+                                        type="password"
+                                        className="form-control form-control-lg"
+                                        id="password"
+                                        required
+                                        minLength={8}
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                    />
+
+                                </div>
+                                <div className="d-flex justify-content-around align-items-center mb-4">
+                                    <button type="submit" className="btn btn-primary btn-lg btn-block">Sign in</button>
+                                    <a href="#!">Forgot password?</a>
+                                </div>
+                            </form>
+
+                            {error && (
+                                <div className="alert alert-danger alert-dismissible fade show position-absolute w-30 mb-4" role="alert">
+                                    <strong>Login failed!</strong> {error}
+                                </div>
+                            )}
+                        </div>
+
+                    </div>
+
+
+                </div>
+            </section>
+        </>
+    );
+}
+

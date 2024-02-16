@@ -11,7 +11,7 @@ router.post('/', async (req, res) => {
         const user = await User.findOne({ username });
 
         if (!user) {
-            res.status(401).json({ success: false, message: 'Invalid username ' });
+            res.status(401).send('Invalid username');
             return;
         }
 
@@ -25,11 +25,11 @@ router.post('/', async (req, res) => {
                 message: `Welcome, ${user.username}!`,
             });
         } else {
-            res.status(401).json({ success: false, message: 'Invalid  password' });
+            res.status(401).send('Invalid  password');
         }
     } catch (error) {
         console.error('Error during login:', error);
-        res.status(500).json({ success: false, message: 'Internal Server Error' });
+        res.status(500).send('Internal Server Error');
     }
 });
 

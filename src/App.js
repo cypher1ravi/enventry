@@ -4,14 +4,16 @@ import './App.css';
 import { Route, Routes } from 'react-router-dom';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
-import AddProduct from './components/AddProduct';
+import AddPurches from './components/AddPurches';
 import Issueed from './components/IssueItem';
 import Layout from './components/Layout';
 import ShowItem from './components/ShowItem';
 import IssuedItems from './components/IssuedItemList';
 import ChangePassword from './components/ChangePassword';
-import PrivateRoute from './PrivateRoute'; // Import the PrivateRoute component
-import { AuthProvider } from './AuthContext'; // Import the AuthProvider
+import PrivateRoute from './PrivateRoute';
+import { AuthProvider } from './AuthContext';
+import ShowPurches from './components/ShowPurches';
+
 
 
 function App() {
@@ -24,12 +26,12 @@ function App() {
           <Route element={<PrivateRoute />}>
             <Route path='/layout' element={<Layout />}>
               <Route index element={<Dashboard />} />
-              <Route path="additem" element={<AddProduct />} />
+              <Route path="additem" element={<AddPurches />} />
               <Route path="showitem" element={<ShowItem />} />
+              <Route path="showpurches" element={<ShowPurches />} />
               <Route path="issueItem" element={<Issueed />} />
               <Route path="showIssuedItem" element={<IssuedItems />} />
               <Route path="changePassword" element={<ChangePassword />} />
-
             </Route >
           </Route>
         </Routes>

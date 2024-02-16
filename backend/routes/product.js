@@ -3,6 +3,7 @@ const router = express.Router();
 const PRODUCT = require('../models/Product');
 
 
+
 router.get('/', async (req, res) => {
     const products = await PRODUCT.find();
     res.json(products);
@@ -13,6 +14,22 @@ router.get('/productName', async (req, res) => {
         // Use MongoDB aggregation to get unique product types
         const productName = await PRODUCT.distinct('productName');
         res.json(productName);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+router.get('/:id', async (req, res) => {
+    const id = req.params.id;
+
+    try {
+        // Find distinct product types for the given product name
+        const product = await PRODUCT.findById(id)
+        if (!product) {
+            return res.status(404).json({ error: 'Product types not found for the given name' });
+        } else {
+            res.json(product);
+        }
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -43,10 +60,9 @@ router.get('/productBrand/:productName/:productType', async (req, res) => {
 
     try {
         // Find distinct product brands for the given name and type
-        const productBrands = await PRODUCT.distinct('productBrand', { productName, productType });
-
-        if (productBrands.length > 0) {
-            res.json({ productName, productType, productBrands });
+        const Brands = await PRODUCT.find({ productName, productType }, { _id: 1, productBrand: 1 });
+        if (Brands.length > 0) {
+            res.json(Brands);
         } else {
             res.status(404).json({ error: 'Product brands not found for the given name and type' });
         }
@@ -57,26 +73,43 @@ router.get('/productBrand/:productName/:productType', async (req, res) => {
 });
 
 router.post('/addProduct', async (req, res) => {
-    const { productName,
-        productType,
-        productBrand,
-        quantity,
-        date,
-        vendorName,
-        description } = req.body;
+    const { productName, productType, productBrand } = req.body;
 
+
+    const existingProduct = await PRODUCT.findOne({
+        productName: productName,
+        productType: productType,
+        productBrand: productBrand
+    });
+
+    if (existingProduct) {
+
+        return res.status(400).json({ error: "Product with same name, type, and brand already exists." });
+    }
+
+    // Create a new product if it doesn't exist
     const newProduct = new PRODUCT({
         productName,
         productType,
         productBrand,
-        quantity,
-        date,
-        vendorName,
-        description
     });
+
     await newProduct.save();
-    res.json(newProduct);
-    res.status(201)
+    res.status(201).json(newProduct);
+});
+router.put('/update/:id', async (req, res) => {
+    try {
+        const productId = req.params.id;
+        const updatedProductData = req.body;
+
+        // Find the product by ID and update its data
+        const updatedProduct = await PRODUCT.findByIdAndUpdate(productId, updatedProductData, { new: true });
+
+        res.json(updatedProduct);
+    } catch (error) {
+        console.error('Error updating product:', error);
+        res.status(500).json({ error: 'An error occurred while updating the product.' });
+    }
 });
 router.delete('/delete/:id', async (req, res) => {
     const productId = req.params.id;

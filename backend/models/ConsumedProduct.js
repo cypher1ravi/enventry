@@ -1,11 +1,9 @@
 const mongoose = require('mongoose');
 
 const ConsumedProductSchema = new mongoose.Schema({
+    productId: mongoose.Schema.Types.ObjectId,
     employeeName: String,
     employeeId: String,
-    productName: String,
-    productType: String,
-    productBrand: String,
     quantity: Number,
     date: String,
     engineerName: String,

@@ -1,9 +1,12 @@
 import React from 'react';
+import Navbar from 'react-bootstrap/Navbar';
+import Nav from 'react-bootstrap/Nav';
+import Button from 'react-bootstrap/Button';
 import logo from "../imges/logo.png";
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
 
-export default function Navbar() {
+export default function MyNavbar() {
     const { loginUser, authenticated, logout } = useAuth();
     const navigate = useNavigate();
 
@@ -14,28 +17,27 @@ export default function Navbar() {
     };
 
     return (
-        <nav id='main-menu' className="navbar bg-white fixed-top shadow">
+        <Navbar bg="white" expand="md" fixed="top" className="shadow">
             <div className="container-fluid">
-
-                <button className="navbar-toggler"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#sidebarMenu"
-                    aria-controls="sidebarMenu"
-                    aria-expanded="false"
-                    aria-label="Toggle navigation">
+                <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                <Navbar.Brand >
                     <img src={logo} alt="Logo" width="80" height="40" className="d-inline-block align-text-top" />
-                </button>
-                <div>{loginUser && <span>Welcome Back {loginUser}</span>}</div>
-
-                <div className="d-none d-md-flex input-group w-auto">
-                    {authenticated ? (
-                        <button className="list-group-item list-group-item-action py-2 ripple" onClick={handleLogout}>
-                            <i className="fa-solid fa-right-from-bracket"></i><span>Logout</span>
-                        </button>
-                    ) : ('')}
-                </div>
+                </Navbar.Brand>
+                <Navbar.Collapse id="basic-navbar-nav">
+                    <Nav className="me-auto">
+                        {loginUser && <Nav.Link>Welcome Back {loginUser}</Nav.Link>}
+                    </Nav>
+                    <Nav className="d-none d-md-flex">
+                        {authenticated ? (
+                            <Button variant="outline-warning" onClick={handleLogout}>
+                                <i className="fa-solid fa-right-from-bracket"></i> Logout
+                            </Button>
+                        ) : null}
+                    </Nav>
+                </Navbar.Collapse>
             </div>
-        </nav>
+        </Navbar>
     );
 }
+
+

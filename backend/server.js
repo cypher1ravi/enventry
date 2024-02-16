@@ -8,22 +8,28 @@ const issuedProduct = require('./routes/issuedProduct')
 const dashboard = require('./routes/dashboardApi')
 const login = require('./routes/login')
 const password = require('./routes/password')
-const register = require('./routes/register')
+const register = require('./routes/register');
+const Purches = require('./routes/purches')
+require('dotenv').config();
 
-const PORT = 3001;
-
+const PORT = process.env.PORT || 3000;
+const uri = process.env.URI
 app.use(cors());
 app.use(express.json());
 
-mongoose.connect('mongodb://localhost:27017/inven', {
+mongoose.connect(uri, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+
 });
 
 //product api
-app.use('/Products', product);
+app.get('/', (req, res) => {
+    res.send("Server is now working")
+});
+app.use('/products', product);
+app.use('/purches', Purches);
 app.use('/consumeProduct', issuedProduct);
-app.use('/dashboard', dashboard);
 app.use('/dashboard', dashboard);
 app.use('/login', login);
 app.use('/register', register);

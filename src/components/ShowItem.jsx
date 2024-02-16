@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
+import AddProduct from './modal/AddProduct';
+import EditProductModal from './modal/EditProduct'; // Import the new modal component
 
 const ShowItem = () => {
     const [items, setItems] = useState([]);
+    const [editItemId, setEditItemId] = useState(null); // State to manage the ID of the item being edited
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 // Assuming you have an API endpoint to fetch item data
-                const response = await fetch('http://localhost:3001/products');
+                const response = await fetch('http://localhost:3001/products/');
                 const data = await response.json();
                 setItems(data);
             } catch (error) {
@@ -19,7 +22,7 @@ const ShowItem = () => {
     }, []);
 
     const handleEditItem = (itemId) => {
-        // Add your edit logic here
+        setEditItemId(itemId); // Set the ID of the item being edited
     };
 
     const handleDeleteItem = async (itemId) => {
@@ -45,17 +48,20 @@ const ShowItem = () => {
 
     return (
         <div className="container mt-2">
-            <h5 className='text-primary'>Show Items</h5>
-            <hr />
-            <table className="table table-striped table-bordered">
+            <div className="d-flex justify-content-between">
+                <h5 className='text-primary'>Show Products</h5>
+                <div>
+                    <AddProduct />
+                </div>
+
+            </div>
+            <hr className='text-danger' />
+            <table className="table table-striped table-bordered hover">
                 <thead>
                     <tr className='table-info'>
                         <th>Product Name</th>
                         <th>Product Type</th>
                         <th>Product Brand</th>
-                        <th>Quantity</th>
-                        <th>Date</th>
-                        <th>Vendor Name</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -65,9 +71,7 @@ const ShowItem = () => {
                             <td>{item.productName}</td>
                             <td>{item.productType}</td>
                             <td>{item.productBrand}</td>
-                            <td>{item.quantity}</td>
-                            <td>{item.date}</td>
-                            <td>{item.vendorName}</td>
+
                             <td>
                                 <button
                                     type="button"
@@ -88,6 +92,13 @@ const ShowItem = () => {
                     ))}
                 </tbody>
             </table>
+
+            {/* Edit Product Modal */}
+            <EditProductModal
+                show={!!editItemId} // Show the modal when editItemId is not null
+                itemId={editItemId} // Pass the item ID to the modal
+                onHide={() => setEditItemId(null)} // Close the modal when onHide is triggered
+            />
         </div>
     );
 };
