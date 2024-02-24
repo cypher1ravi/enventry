@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
+import { useAuth } from '../../AuthContext';
 
 const EditProduct = ({ show, itemId, onHide }) => {
+    const { token } = useAuth();
     const [product, setProduct] = useState({
         productName: '',
         productType: '',
@@ -39,6 +41,7 @@ const EditProduct = ({ show, itemId, onHide }) => {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': token,
                 },
                 body: JSON.stringify(product),
             });

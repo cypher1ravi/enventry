@@ -5,6 +5,7 @@ import Button from 'react-bootstrap/Button';
 import logo from "../imges/logo.png";
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
+import { Container } from 'react-bootstrap';
 
 export default function MyNavbar() {
     const { loginUser, authenticated, logout } = useAuth();
@@ -12,15 +13,14 @@ export default function MyNavbar() {
 
     const handleLogout = () => {
         logout();
-        // Optionally, redirect to the login page after logout
         navigate('/');
     };
 
     return (
         <Navbar bg="white" expand="md" fixed="top" className="shadow">
-            <div className="container-fluid">
+            <Container fluid>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                <Navbar.Brand >
+                <Navbar.Brand>
                     <img src={logo} alt="Logo" width="80" height="40" className="d-inline-block align-text-top" />
                 </Navbar.Brand>
                 <Navbar.Collapse id="basic-navbar-nav">
@@ -35,7 +35,7 @@ export default function MyNavbar() {
                         ) : null}
                     </Nav>
                 </Navbar.Collapse>
-            </div>
+            </Container>
         </Navbar>
     );
 }

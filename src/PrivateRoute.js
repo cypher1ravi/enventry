@@ -4,7 +4,7 @@ import { Outlet, Navigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 
 const PrivateRoute = () => {
-  const { authenticated } = useAuth();
+  const { authenticated } = useAuth()
 
   return authenticated ? <Outlet /> : <Navigate to="/" replace />;
 };

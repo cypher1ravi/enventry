@@ -3,15 +3,7 @@ const router = express.Router();
 const PRODUCT = require('../models/Product');
 const Purches = require('../models/Purches');
 const CONSUMEDPRODUCT = require('../models/ConsumedProduct');
-async function getAllProductIds() {
-    try {
-        const products = await PRODUCT.find({}, { _id: 1 });
-        return products.map(product => product._id);
-    } catch (error) {
-        console.error('Error getting product IDs:', error);
-        throw error;
-    }
-}
+
 async function getProductName(productId) {
     try {
         const products = await PRODUCT.findById(productId);
@@ -39,7 +31,15 @@ async function getProductBrand(productId) {
         throw error;
     }
 }
-
+async function getAllProductIds() {
+    try {
+        const products = await PRODUCT.find({}, { _id: 1 });
+        return products.map(product => product._id);
+    } catch (error) {
+        console.error('Error getting product IDs:', error);
+        throw error;
+    }
+}
 async function calculateTotalQuantity(productId) {
     try {
         const result = await Purches.aggregate([

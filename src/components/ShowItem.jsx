@@ -1,16 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import AddProduct from './modal/AddProduct';
 import EditProductModal from './modal/EditProduct'; // Import the new modal component
+import { useAuth } from '../AuthContext';
 
 const ShowItem = () => {
     const [items, setItems] = useState([]);
     const [editItemId, setEditItemId] = useState(null); // State to manage the ID of the item being edited
+    const { token } = useAuth()
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 // Assuming you have an API endpoint to fetch item data
-                const response = await fetch('http://localhost:3001/products/');
+                const response = await fetch('http://localhost:3001/products/', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': token
+
+                    }
+                });
                 const data = await response.json();
                 setItems(data);
             } catch (error) {
@@ -31,6 +40,7 @@ const ShowItem = () => {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': token
                 },
             });
 
@@ -66,7 +76,7 @@ const ShowItem = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {items.map((item) => (
+                    {items.length > 0 && (items.map((item) => (
                         <tr key={item._id}>
                             <td>{item.productName}</td>
                             <td>{item.productType}</td>
@@ -89,7 +99,7 @@ const ShowItem = () => {
                                 </button>
                             </td>
                         </tr>
-                    ))}
+                    )))}
                 </tbody>
             </table>
 

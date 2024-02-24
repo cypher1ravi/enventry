@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import Form from 'react-bootstrap/Form';
+import { useAuth } from '../AuthContext';
 const IssueItem = () => {
     const [employeeName, setEmployeeName] = useState('');
     const [employeeId, setEmployeeId] = useState('');
@@ -17,13 +18,20 @@ const IssueItem = () => {
     const [selectedProductType, setSelectedProductType] = useState('');
     const [productBrands, setProductBrands] = useState([]);
     const [selectedProductBrands, setSelectedProductBrands] = useState('');
-
+    const { token } = useAuth()
 
 
     useEffect(() => {
         const fetchProductNames = async () => {
             try {
-                const response = await fetch('http://localhost:3001/products/productName');
+                const response = await fetch('http://localhost:3001/products/productName', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': token
+
+                    }
+                });
                 const data = await response.json();
                 setProductNames(data);
             } catch (error) {
@@ -38,7 +46,14 @@ const IssueItem = () => {
         const fetchProductTypes = async () => {
             if (selectedProductName) {
                 try {
-                    const response = await fetch(`http://localhost:3001/products/productTypes/${selectedProductName}`);
+                    const response = await fetch(`http://localhost:3001/products/productTypes/${selectedProductName}`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': token
+
+                        }
+                    });
                     const data = await response.json();
                     setProductTypes(data.productTypes);
                 } catch (error) {
@@ -54,9 +69,18 @@ const IssueItem = () => {
         const fetchProductBrands = async () => {
             if (selectedProductName && selectedProductType) {
                 try {
-                    const response = await fetch(`http://localhost:3001/products/productBrand/${selectedProductName}/${selectedProductType}`);
+                    const response = await fetch(`http://localhost:3001/products/productBrand/${selectedProductName}/${selectedProductType}`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': token
+
+                        }
+                    });
                     const data = await response.json();
                     setProductBrands(data);
+                    console.log(data);
+
                 } catch (error) {
                     console.error('Error fetching product brands:', error);
                 }
@@ -83,6 +107,7 @@ const IssueItem = () => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': token
                 },
                 body: JSON.stringify(issuedItem),
             });
@@ -115,7 +140,7 @@ const IssueItem = () => {
                                 onChange={(e) => setSelectedProductName(e.target.value)}
                                 value={selectedProductName}>
                                 <option value="" className=' disabled defaultValue hidden'>
-                                    Select Name
+                                    Product Name
                                 </option>
                                 {productNames.map((p, index) => (
                                     <option key={index} value={p}>
@@ -131,7 +156,7 @@ const IssueItem = () => {
                                 onChange={(e) => setSelectedProductType(e.target.value)}
                                 value={selectedProductType}>
                                 <option value="" className=' disabled defaultValue hidden'>
-                                    Select Type
+                                    Product Type
                                 </option>
 
                                 {productTypes.map((type, index) => (
@@ -150,9 +175,9 @@ const IssueItem = () => {
                                     setSelectedProductBrands(e.target.value);
                                     setProductId(e.target.value);
                                 }}
-                                value={setSelectedProductBrands}>
+                                value={selectedProductBrands}>
                                 <option value="" disabled defaultValue hidden>
-                                    Select Brand
+                                    Product Brand
                                 </option>
                                 {productBrands.map((brand) => (
                                     <option key={brand._id} value={brand._id}>

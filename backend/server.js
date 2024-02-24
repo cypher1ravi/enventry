@@ -10,30 +10,25 @@ const login = require('./routes/login')
 const password = require('./routes/password')
 const register = require('./routes/register');
 const Purches = require('./routes/purches')
-require('dotenv').config();
-
+const verifyToken = require('./middleware/auth')
 const PORT = process.env.PORT || 3000;
 const uri = process.env.URI
+
 app.use(cors());
+require('dotenv').config();
 app.use(express.json());
 
-mongoose.connect(uri, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-
-});
-
-//product api
+mongoose.connect(uri);
 app.get('/', (req, res) => {
     res.send("Server is now working")
 });
-app.use('/products', product);
-app.use('/purches', Purches);
-app.use('/consumeProduct', issuedProduct);
-app.use('/dashboard', dashboard);
 app.use('/login', login);
 app.use('/register', register);
-app.use('/password', password);
+app.use('/products', verifyToken, product);
+app.use('/purches', verifyToken, Purches);
+app.use('/consumeProduct', verifyToken, issuedProduct);
+app.use('/dashboard', verifyToken, dashboard);
+app.use('/password', verifyToken, password);
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

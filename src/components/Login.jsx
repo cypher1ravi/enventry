@@ -9,7 +9,8 @@ export default function Login() {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
-    const { login, setLoginUser } = useAuth();
+    const { login } = useAuth();
+
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -23,17 +24,16 @@ export default function Login() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+
                 },
                 body: JSON.stringify(user),
             });
 
             if (response.ok) {
-                const responseData = await response.json();
-                console.log('Login successful!');
+                const data = await response.json();
+                // console.log(data.authToken);
                 alert('Login successful!');
-                login();
-                setLoginUser(responseData.user);
-                console.log(responseData.user);
+                login(data.authToken);
                 navigate('/layout');
             } else {
                 const errorMessage = await response.text();

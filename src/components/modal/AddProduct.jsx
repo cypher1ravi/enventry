@@ -2,13 +2,14 @@ import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
+import { useAuth } from '../../AuthContext';
 
 function AddProduct() {
     const [show, setShow] = useState(false);
     const [productName, setProductName] = useState('');
     const [productType, setProductType] = useState('');
     const [productBrand, setProductBrand] = useState('');
-
+    const { token } = useAuth()
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
@@ -28,6 +29,7 @@ function AddProduct() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': token
                 },
                 body: JSON.stringify(newProduct),
             });
@@ -47,7 +49,7 @@ function AddProduct() {
     return (
         <>
             <Button className='rounded-circle' variant="primary" onClick={handleShow}>
-                <i class="fa-solid fa-plus"></i>
+                <i className="fa-solid fa-plus"></i>
             </Button>
 
             <Modal show={show} onHide={handleClose}>

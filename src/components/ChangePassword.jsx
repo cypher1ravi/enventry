@@ -4,7 +4,7 @@ import { useAuth } from '../AuthContext';
 const ChangePassword = () => {
     const { loginUser } = useAuth();
 
-    const username = loginUser;
+    const userId = loginUser;
     const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -43,7 +43,7 @@ const ChangePassword = () => {
         }
 
         const changePassword = {
-            username,
+            userId,
             currentPassword,
             newPassword,
             confirmPassword,
